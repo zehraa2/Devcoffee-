@@ -41,7 +41,7 @@ downloadButton.addEventListener('click', () => {
     const dataUrl = reader.result;
 
     // Store the data URL in local storage
-    localStorage.setItem('downloadedVideo', dataUrl);
+    localStorage.setItem('downloadedVideo', dataUrl); // You can also use sessionStorage
 
     console.log('Video data saved in local storage.');
   };
