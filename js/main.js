@@ -1,14 +1,3 @@
-/*
-*  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
-*
-*  Use of this source code is governed by a BSD-style license
-*  that can be found in the LICENSE file in the root of the source
-*  tree.
-*/
-
-// This code is adapted from
-// https://rawgit.com/Miguelao/demos/master/mediarecorder.html
-
 'use strict';
 
 /* globals MediaRecorder */
@@ -36,28 +25,30 @@ recordButton.addEventListener('click', () => {
 const playButton = document.querySelector('button#play');
 playButton.addEventListener('click', () => {
   const mimeType = codecPreferences.options[codecPreferences.selectedIndex].value.split(';', 1)[0];
-  const superBuffer = new Blob(recordedBlobs, {type: mimeType});
-  recordedVideo.src = null;
-  recordedVideo.srcObject = null;
-  recordedVideo.src = window.URL.createObjectURL(superBuffer);
+  const superBlob = new Blob(recordedBlobs, { type: mimeType });
+  recordedVideo.src = window.URL.createObjectURL(superBlob);
   recordedVideo.controls = true;
   recordedVideo.play();
 });
 
 const downloadButton = document.querySelector('button#download');
 downloadButton.addEventListener('click', () => {
-  const blob = new Blob(recordedBlobs, {type: 'video/webm'});
+  const blob = new Blob(recordedBlobs, { type: 'video/webm' });
   const url = window.URL.createObjectURL(blob);
+
+  // Create an anchor element to trigger download
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = url;
   a.download = 'test.webm';
   document.body.appendChild(a);
+
+  // Trigger a click event on the anchor
   a.click();
-  setTimeout(() => {
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  }, 100);
+
+  // Clean up
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
 });
 
 function handleDataAvailable(event) {
@@ -83,7 +74,7 @@ function getSupportedMimeTypes() {
 function startRecording() {
   recordedBlobs = [];
   const mimeType = codecPreferences.options[codecPreferences.selectedIndex].value;
-  const options = {mimeType};
+  const options = { mimeType };
 
   try {
     mediaRecorder = new MediaRecorder(window.stream, options);
@@ -143,10 +134,11 @@ document.querySelector('button#start').addEventListener('click', async () => {
   const hasEchoCancellation = document.querySelector('#echoCancellation').checked;
   const constraints = {
     audio: {
-      echoCancellation: {exact: hasEchoCancellation}
+      echoCancellation: { exact: hasEchoCancellation }
     },
     video: {
-      width: 1280, height: 720
+      width: 1280,
+      height: 720
     }
   };
   console.log('Using media constraints:', constraints);
