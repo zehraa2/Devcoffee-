@@ -34,21 +34,18 @@ playButton.addEventListener('click', () => {
 const downloadButton = document.querySelector('button#download');
 downloadButton.addEventListener('click', () => {
   const blob = new Blob(recordedBlobs, { type: 'video/webm' });
-  const url = window.URL.createObjectURL(blob);
 
-  // Create an anchor element to trigger download
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
-  a.download = 'test.webm';
-  document.body.appendChild(a);
+  // Convert the blob to a data URL
+  const reader = new FileReader();
+  reader.onload = function() {
+    const dataUrl = reader.result;
 
-  // Trigger a click event on the anchor
-  a.click();
+    // Store the data URL in local storage
+    localStorage.setItem('downloadedVideo', dataUrl);
 
-  // Clean up
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+    console.log('Video data saved in local storage.');
+  };
+  reader.readAsDataURL(blob);
 });
 
 function handleDataAvailable(event) {
