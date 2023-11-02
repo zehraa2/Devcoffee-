@@ -35,17 +35,13 @@ const downloadButton = document.querySelector('button#download');
 downloadButton.addEventListener('click', () => {
   const blob = new Blob(recordedBlobs, { type: 'video/webm' });
 
-  // Convert the blob to a data URL
-  const reader = new FileReader();
-  reader.onload = function() {
-    const dataUrl = reader.result;
+  // Create a video element to display the recorded video
+  const videoElement = document.createElement('video');
+  videoElement.controls = true;
+  videoElement.src = URL.createObjectURL(blob);
+  document.body.appendChild(videoElement); // You can append it wherever you want
 
-    // Store the data URL in local storage
-    localStorage.setItem('downloadedVideo', dataUrl); // You can also use sessionStorage
-
-    console.log('Video data saved in local storage.');
-  };
-  reader.readAsDataURL(blob);
+  console.log('Video displayed from the recorded data.');
 });
 
 function handleDataAvailable(event) {
