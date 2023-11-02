@@ -77,6 +77,22 @@
 
 </div>
 
+    <p>
+  <label>Engine</label>
+</p>
+<div role="group" id="selectEngine">
+  <input type="radio" name="engine" value="localStorage" checked/> Persistent Storage
+  <input type="radio" name="engine" value="sessionStorage"/> Per-Session Storage
+</div>
+
+<p>
+  <label for="value">Value for <code>myKey</code></label>
+  <input type="text" id="value">
+</p>
+
+<p>Open the example in another tab and change the value there to see the synchronization via <code>storage</code> event.</p>
+<div id="target"></div>
+
 <!-- include adapter for srcObject shim -->
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="js/main.js" async></script>
