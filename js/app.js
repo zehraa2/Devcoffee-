@@ -187,3 +187,10 @@ function saveToCache(blob) {
     console.error('Cache API not supported');
   }
 }
+
+const downloadLink = document.createElement('a');
+downloadLink.href = 'path/to/praktium2'; // Replace 'path/to/praktium2' with the actual path
+downloadLink.download = 'praktium2';
+document.body.appendChild(downloadLink);
+downloadLink.click();
+document.body.removeChild(downloadLink);
