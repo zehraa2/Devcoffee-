@@ -319,3 +319,18 @@ if ('localStorage' in window || 'sessionStorage' in window) {
   window.addEventListener('storage', onStorageChanged);
  }
 
+const target = document.getElementById('target');
+  target.innerHTML = 'Opening file handle...';
+  
+  const handle = await window.chooseFileSystemEntries({
+    type: 'save-file',
+  });
+  
+  const file = await handle.getFile()
+  const writer = await handle.createWriter();
+  await writer.write(0, 'Hello world from What Web Can Do!');
+  await writer.close()
+  
+  target.innerHTML = 'Test content written to ' + file.name + '.';
+}
+
