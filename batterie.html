@@ -36,34 +36,63 @@
         <div id="battery-level"></div>
     </div>
 
-    <!-- Bild für den Batteriestatus -->
-    <img src="img/battery_unknown.png" alt="Batteriestatus" id="battery-status">
-
     <script>
-        // Dein bisheriger JavaScript-Code
+        if ('getBattery' in navigator || ('battery' in navigator && 'Promise' in window)) {
+            var target = document.getElementById('battery-bar');
+            var batteryLevel = document.getElementById('battery-level');
 
-        function updateBatteryStatusImage(charging) {
-            var image = document.getElementById('battery-status');
-            if (charging) {
-                image.src = 'img/battery_charging.png';
-            } else {
-                image.src = 'img/battery_discharging.png';
+            function updateBatteryLevel(level) {
+                batteryLevel.style.width = (level * 100) + '%';
             }
-        }
 
-        // Weitere Teile deines Codes...
+            function handleChange(change) {
+                var timeBadge = new Date().toTimeString().split(' ')[0];
+                var newState = document.createElement('p');
+                newState.innerHTML = '' + timeBadge + ' ' + change + '.';
+                target.appendChild(newState);
+                updateBatteryLevel(level); // Aktualisiere den Batteriestatus beim Ändern
+            }
 
-        batteryPromise.then(function (battery) {
-            // Andere Aktualisierungen...
+            function onChargingChange() {
+                handleChange('Batterieladestatus geändert auf ' + (this.charging ? 'Lädt' : 'Entlädt') + '');
+            }
 
-            updateBatteryStatusImage(battery.charging); // Aktualisiere das Batteriestatusbild
+            function onChargingTimeChange() {
+                handleChange('Batterieladezeit geändert auf ' + this.chargingTime + ' s');
+            }
 
-            battery.addEventListener('chargingchange', function() {
-                onChargingChange.call(battery);
-                updateBatteryStatusImage(battery.charging); // Aktualisiere das Bild bei Änderung des Ladezustands
+            function onDischargingTimeChange() {
+                handleChange('Batterieentladezeit geändert auf ' + this.dischargingTime + ' s');
+            }
+
+            function onLevelChange() {
+                handleChange('Batteriestatus geändert auf ' + (this.level * 100) + '%');
+            }
+
+            var batteryPromise;
+
+            if ('getBattery' in navigator) {
+                batteryPromise = navigator.getBattery();
+            } else {
+                batteryPromise = Promise.resolve(navigator.battery);
+            }
+
+            batteryPromise.then(function (battery) {
+                document.getElementById('charging').innerHTML = battery.charging ? 'Lädt' : 'Entlädt';
+                document.getElementById('chargingTime').innerHTML = battery.chargingTime + ' s';
+                document.getElementById('dischargingTime').innerHTML = battery.dischargingTime + ' s';
+                document.getElementById('level').innerHTML = (battery.level * 100) + '%';
+
+                updateBatteryLevel(battery.level); // Aktualisiere den Batteriestatus beim Laden der Seite
+
+                battery.addEventListener('chargingchange', onChargingChange);
+                battery.addEventListener('chargingtimechange', onChargingTimeChange);
+                battery.addEventListener('dischargingtimechange', onDischargingTimeChange);
+                battery.addEventListener('levelchange', function() {
+                    onLevelChange.call(battery); // Rufe die Funktion mit "this" als "battery" auf
+                });
             });
-            // Weitere Eventlistener hinzufügen...
-        });
+        }
     </script>
 
     <script src="js/app.js"></script>
