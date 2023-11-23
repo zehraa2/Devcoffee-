@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>Homepage</title>
+</head>
+<body>
+    <p>Initial battery status was <b id="charging">unknown</b>, charging time <b id="chargingTime">unknown</b>, discharging time <b id="dischargingTime">unknown</b>, level <b id="level">unknown</b>.</p>
+    <div id="target"></div>
+
     <script>
         if ('getBattery' in navigator || ('battery' in navigator && 'Promise' in window)) {
         var target = document.getElementById('target');
@@ -46,9 +51,5 @@
           battery.addEventListener('levelchange', onLevelChange);
         });
     </script>
-</head>
-<body>
-    <p>Initial battery status was <b id="charging">unknown</b>, charging time <b id="chargingTime">unknown</b>, discharging time <b id="dischargingTime">unknown</b>, level <b id="level">unknown</b>.</p>
-    <div id="target"></div>
 </body>
 </html>
