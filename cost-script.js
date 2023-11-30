@@ -22,7 +22,3 @@ document.getElementById('costForm').addEventListener('submit', function(event) {
   // Optional: Rückmeldung an den Benutzer oder andere Aktionen nach dem Speichern
   console.log('Daten gespeichert:', costData);
 });
-
-const savedData = localStorage.getItem('costEntry');
-console.log('Gespeicherte Daten:', JSON.parse(savedData));
-
