@@ -106,6 +106,13 @@
         }
 
         updateTable();
+
+        // Daten als JSON im localStorage speichern
+        localStorage.setItem('costEntry', JSON.stringify(costData));
+        
+        // Optional: Rückmeldung an den Benutzer oder andere Aktionen nach dem Speichern
+        console.log('Daten gespeichert:', costData);
+        });
     </script>
 </body>
 
