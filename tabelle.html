@@ -105,6 +105,12 @@
     }
 
     updateTable();
+
+  function saveToLocalStorage() {
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+  }
+  let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
 </script>
 </body>
 </html> 
