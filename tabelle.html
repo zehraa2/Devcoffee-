@@ -1,83 +1,100 @@
-<!DOCTYPE html>
-<html lang="de">
+<h1>Kosten-Tracker</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Gespeicherte Kosten</title>
-</head>
+<form id="expenseForm">
+    <label for="description">Beschreibung:</label>
+    <input type="text" id="description" required>
 
-<body>
+    <label for="date">Datum:</label>
+    <input type="date" id="date" required>
 
-<!DOCTYPE html> 
-<html> 
-<head> 
-    <title>Web Page</title> 
-</head>
+    <label for="category">Kategorie:</label>
+    <input type="text" id="category" required>
 
-<body> 
-    <h1>Welcome to Our Website</h1> 
-    
-    <label for="ds">Description</label>
-    <input type="text" id="ds" name="string">
-    <br><br>
+    <label for="amount">Wert der Transaktion:</label>
+    <input type="number" id="amount" required>
 
-    <label for="date">Enter a Date:</label> 
-    <input type="date" id="date" name="date">
-    <br><br>
+    <!-- Neue Eingabe für den Kontostand -->
+    <label for="balance">Kontostand:</label>
+    <input type="number" id="balance" value="2000" disabled>
 
-    <label for="cy">Category</label>
-    <input type="text" id="cy" name="string">
-    <br><br>
+    <button type="button" onclick="addExpense()">Eintrag hinzufügen</button>
+</form>
 
-    <label for="at">Amount</label>
-    <input type="number" id="at" name="age">
-
-    <button onclick="pruefeEingabe()">Überprüfen</button>
-    <p id="ergebnis"></p>
-
-    <table id="meineTabelle" border="1">
+<table id="expenseTable">
+    <thead>
         <tr>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Amount</th>
+            <th>Beschreibung</th>
+            <th>Datum</th>
+            <th>Kategorie</th>
+            <th>Wert der Transaktion</th>
+            <th>Kontostand</th>
         </tr>
-    </table>
+    </thead>
+    <tbody id="expenseList">
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" id="total">Gesamtsumme:</td>
+            <td id="currentBalance">2000.00</td>
+        </tr>
+    </tfoot>
+</table>
 
-    <script>
-function pruefeEingabe() {
-    var ds = document.getElementById("ds").value;
-    var date = document.getElementById("date").value;
-    var cy = document.getElementById("cy").value;
-    var at = document.getElementById("at").value;
+<script>
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+    let currentBalance = 2000; // Startwert für den Kontostand
 
-    if (ds === "" || date === "" || cy === "" || at === "") {
-        document.getElementById("ergebnis").innerText = "Bitte füllen Sie alle Felder aus.";
-        return;
+    function addExpense() {
+        const description = document.getElementById('description').value;
+        const date = document.getElementById('date').value;
+        const category = document.getElementById('category').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+
+        if (description && date && category && !isNaN(amount)) {
+            expenses.push({ description, date, category, amount });
+            saveToLocalStorage();  
+            updateTable();
+            clearForm();
+
+            // Aktualisiere den Kontostand basierend auf der Transaktion
+            currentBalance += amount;
+            document.getElementById('currentBalance').textContent = currentBalance.toFixed(2);
+        } else {
+            alert('Bitte füllen Sie alle Felder korrekt aus.');
+        }
     }
 
-    // Store the values in the cache
-    localStorage.setItem("myData", JSON.stringify({ ds: ds, date: date, cy: cy, at: at }));
+    function updateTable() {
+        const tableBody = document.getElementById('expenseList');
+        const totalElement = document.getElementById('total');
 
-    // Retrieve the saved data
-    var savedData = JSON.parse(localStorage.getItem("myData"));
-    console.log(savedData);
+        tableBody.innerHTML = '';
 
-    // Add the values to the table
-    var table = document.getElementById("meineTabelle");
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    cell1.innerHTML = ds;
-    cell2.innerHTML = date;
-    cell3.innerHTML = cy;
-    cell4.innerHTML = at;
+        let totalAmount = 0;
+        expenses.forEach(expense => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).textContent = expense.description;
+            row.insertCell(1).textContent = expense.date;
+            row.insertCell(2).textContent = expense.category;
+            row.insertCell(3).textContent = expense.amount.toFixed(2);
 
-    document.getElementById("ergebnis").innerText = "";
-}
-    </script>
-</body>
+            totalAmount += expense.amount;
+        });
 
-</html>
+        totalElement.textContent = 'Gesamtsumme:';
+        document.getElementById('currentBalance').textContent = currentBalance.toFixed(2);
+    }
+
+    function saveToLocalStorage() {
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+    }
+
+    function clearForm() {
+        document.getElementById('description').value = '';
+        document.getElementById('date').value = '';
+        document.getElementById('category').value = '';
+        document.getElementById('amount').value = '';
+    }
+
+    updateTable();
+</script>
