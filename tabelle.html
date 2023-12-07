@@ -103,27 +103,29 @@
 
 <script>
     let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-    let currentBalance = 2000; // Startwert für den Kontostand
+        let currentBalance = 2000; // Startwert für den Kontostand
 
-    function addExpense() {
-        const description = document.getElementById('description').value;
-        const date = document.getElementById('date').value;
-        const category = document.getElementById('category').value;
-        const amount = parseFloat(document.getElementById('amount').value);
+        function addExpense() {
+            const description = document.getElementById('description').value;
+            const date = document.getElementById('date').value;
+            const category = document.getElementById('category').value;
+            const amount = parseFloat(document.getElementById('amount').value);
 
-        if (description && date && category && !isNaN(amount)) {
-            expenses.push({ description, date, category, amount });
-            saveToLocalStorage();  
-            updateTable();
-            clearForm();
+            if (description && date && category && !isNaN(amount)) {
+                const expense = { description, date, category, amount };
+                expenses.push(expense);
 
-            // Aktualisiere den Kontostand basierend auf der Transaktion
-            currentBalance += amount;
-            document.getElementById('currentBalance').textContent = currentBalance.toFixed(2);
-        } else {
-            alert('Bitte füllen Sie alle Felder korrekt aus.');
+                saveToLocalStorage();  
+                updateTable();
+                clearForm();
+
+                // Aktualisiere den Kontostand basierend auf der Transaktion
+                currentBalance += amount;
+                document.getElementById('currentBalance').textContent = currentBalance.toFixed(2);
+            } else {
+                alert('Bitte füllen Sie alle Felder korrekt aus.');
+            }
         }
-    }
 
     function updateTable() {
         const tableBody = document.getElementById('expenseList');
@@ -147,8 +149,8 @@
     }
 
     function saveToLocalStorage() {
-        localStorage.setItem('expenses', JSON.stringify(expenses));
-    }
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+        }
 
     function clearForm() {
         document.getElementById('description').value = '';
@@ -156,12 +158,7 @@
         document.getElementById('category').value = '';
         document.getElementById('amount').value = '';
     }
-        // Store the values in the cache
-    localStorage.setItem("myData", JSON.stringify({ ds: ds, date: date, cy: cy, at: at }));
 
-    // Retrieve the saved data
-    var savedData = JSON.parse(localStorage.getItem("myData"));
-    console.log(savedData);
 
     updateTable();
 </script>
