@@ -156,6 +156,12 @@
         document.getElementById('category').value = '';
         document.getElementById('amount').value = '';
     }
+        // Store the values in the cache
+    localStorage.setItem("myData", JSON.stringify({ ds: ds, date: date, cy: cy, at: at }));
+
+    // Retrieve the saved data
+    var savedData = JSON.parse(localStorage.getItem("myData"));
+    console.log(savedData);
 
     updateTable();
 </script>
