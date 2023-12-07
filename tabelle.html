@@ -52,9 +52,6 @@
             // Store the values in the cache
             localStorage.setItem("myData", JSON.stringify({ ds: ds, date: date, cy: cy, at: at }));
 
-            // Retrieve the saved data
-            var savedData = JSON.parse(localStorage.getItem("myData"));
-
             // Add the values to the table
             var table = document.getElementById("meineTabelle");
             var row = table.insertRow(-1);
@@ -68,7 +65,15 @@
             cell3.innerHTML = cy;
             cell4.innerHTML = at.toFixed(2);
 
-            // Berechnung von Gewinn oder Verlust
+            updateProfitLoss(); // Aktualisiere den Gewinn/Verlust
+
+            document.getElementById("ergebnis").innerText = "";
+        }
+
+        function updateProfitLoss() {
+            var table = document.getElementById("meineTabelle");
+            var cell5 = table.rows[0].insertCell(4); // Füge eine Zelle für Gewinn/Verlust in die Kopfzeile ein
+
             var total = 0;
             var rows = table.rows.length;
 
@@ -78,8 +83,6 @@
 
             var profitLoss = total.toFixed(2);
             cell5.innerHTML = profitLoss;
-
-            document.getElementById("ergebnis").innerText = "";
         }
     </script>
 </body>
