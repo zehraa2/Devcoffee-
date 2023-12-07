@@ -103,7 +103,8 @@
     
     <script>
         let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
-        let currentBalance = 2000; // Startwert für den Kontostand
+        let currentBalance = parseFloat(localStorage.getItem('currentBalance')) || 2000;
+
     
         function addExpense() {
             const description = document.getElementById('description').value;
@@ -148,6 +149,7 @@
     
         function saveToLocalStorage() {
             localStorage.setItem('expenses', JSON.stringify(expenses));
+            localStorage.setItem('currentBalance', currentBalance.toString());
         }
     
         function clearForm() {
